@@ -7,8 +7,9 @@ import com.mygdx.game.AsteroidsGame;
 public class DesktopLauncher {
 	public static void main (String[] arg) {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-		config.height = 30;
-		config.width = 30;
+		config.title = "Wallis Asteroider";
+		config.width = 1280;
+		config.height = 720;
 		new LwjglApplication(new AsteroidsGame(), config);
 	}
 }

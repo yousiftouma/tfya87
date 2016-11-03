@@ -24,8 +24,8 @@ public class AsteroidsFactory implements IAsteroidsFactory {
     @Override
     public Asteroid createAsteroid(Vector2 size) {
         Sprite sprite = new Sprite(asteroidTexture);
-        Vector2 velocity = new Vector2(0,0);
-        Vector2 acc = new Vector2(0,0);
+        Vector2 velocity = new Vector2(3,3);
+        Vector2 acc = new Vector2(1,1);
         double mass = 50;
         return new Asteroid(sprite, getRandomStartPosition(), size, velocity, acc, mass);
     }
@@ -33,7 +33,6 @@ public class AsteroidsFactory implements IAsteroidsFactory {
     private Vector2 getRandomStartPosition(){
         int n = random.nextInt(2);
         int m = random.nextInt(2);
-        System.out.println("n = " + n + " m = " + m);
         float x;
         float y;
         if (n == 0) {

@@ -26,14 +26,22 @@ public class Window extends ApplicationAdapter {
 
     @Override
     public void render () {
+        final float delta = Gdx.graphics.getDeltaTime();
         Gdx.gl.glClearColor(1, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batch.begin();
         batch.draw(background, 0, 0);
-        for (AbstractEntity entity : game.getEntities()) {
-            entity.draw(batch);
+
+        if (!game.isGameOver()){
+            for (AbstractEntity entity : game.getEntities()) {
+                entity.draw(batch);
+            }
+            batch.end();
+            game.updateGame(delta);
         }
-        batch.end();
+        else{
+            System.exit(0);
+        }
     }
 
     @Override

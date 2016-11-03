@@ -37,6 +37,17 @@ public abstract class AbstractEntity {
         sprite.draw(batch);
     }
 
+    public void updatePosition(final float delta){
+        float x = position.x + delta*velocity.x;
+        float y = position.y + delta*velocity.y;
+        setPosition(new Vector2(x,y));
+    }
+
+    public void updateVelocity(final float delta){
+        velocity.x += delta*acceleration.x;
+        velocity.y += delta*acceleration.y;
+    }
+
     public double getMass() {
         return mass;
     }

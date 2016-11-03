@@ -7,6 +7,8 @@ import com.mygdx.game.AsteroidsGame;
 public class DesktopLauncher {
 	public static void main (String[] arg) {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
+		config.height = 30;
+		config.width = 30;
 		new LwjglApplication(new AsteroidsGame(), config);
 	}
 }

@@ -1,16 +1,15 @@
 package com.mygdx.game;
 
-import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.entity.AbstractEntity;
 import com.mygdx.game.entity.Player;
 import com.mygdx.game.entity.factories.AsteroidsFactory;
 import com.mygdx.game.entity.factories.IAsteroidsFactory;
+import com.mygdx.game.entity.factories.IMissileFactory;
+import com.mygdx.game.entity.factories.MissileFactory;
 import com.mygdx.game.physics.CollisionDetector;
 import com.mygdx.game.physics.CollisionPair;
 
@@ -21,7 +20,7 @@ public class AsteroidsGame {
     public static final int GAME_HEIGHT = 720;
     private static final float LEVEL_TIME = 30.0f;
     private static final float MAX_DELTA = 0.1f;
-    public final static Vector2 ASTEROIDS_SIZE = new Vector2(50,50);
+    public final static Vector2 ASTEROIDS_SIZE = new Vector2(64,64);
 
     private float timeBetweenAsteroids = 5.0f;
     private float timeToNewLevel = LEVEL_TIME;
@@ -29,11 +28,13 @@ public class AsteroidsGame {
     private Player player;
     private ArrayList<AbstractEntity> entities;
     private IAsteroidsFactory asteroidsFactory;
+    private IMissileFactory missileFactory;
     private boolean gameOver;
 
     public AsteroidsGame() {
         this.entities = new ArrayList<AbstractEntity>();
         this.asteroidsFactory = new AsteroidsFactory();
+        this.missileFactory = new MissileFactory();
         this.player = getPlayer();
         this.gameOver = false;
         entities.add(player);
@@ -42,6 +43,7 @@ public class AsteroidsGame {
 
     public void updateGame(float delta) {
         if (delta >= MAX_DELTA) delta = MAX_DELTA;
+
         spawnAsteroids(delta);
         changeLevel(delta);
         updatePositions(delta);
@@ -70,6 +72,7 @@ public class AsteroidsGame {
     private void spawnAsteroids (final float delta){
         if (timeToNewAsteroids <= 0){
             entities.add(asteroidsFactory.createAsteroid(ASTEROIDS_SIZE));
+          //  entities.add(0,missileFactory.createMissile(player.getPosition(), player.getDirection()));
             timeToNewAsteroids = timeBetweenAsteroids;
         }else timeToNewAsteroids -= delta;
     }

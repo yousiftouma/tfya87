@@ -76,6 +76,10 @@ public abstract class AbstractEntity {
         return position;
     }
 
+    public float getDirection(){
+        return sprite.getRotation();
+    }
+
     public void setPosition(Vector2 position) {
         this.position = position;
         sprite.setPosition(position.x, position.y);

@@ -1,6 +1,7 @@
 package com.mygdx.game.entity.factories;
 
 import com.badlogic.gdx.math.Vector2;
+import com.mygdx.game.entity.AbstractEntity;
 import com.mygdx.game.entity.Asteroid;
 
 /**

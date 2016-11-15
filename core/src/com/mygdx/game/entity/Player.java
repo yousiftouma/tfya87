@@ -10,7 +10,6 @@ public class Player extends AbstractEntity {
 
     private Sprite sprite;
     private int angularSpeed;
-    private static final int MAX_ANGULAR_SPEED = 300;
 
     public Player(Sprite sprite, Vector2 position, Vector2 size, Vector2 velocity, Vector2 acceleration,
                   double mass) {
@@ -22,18 +21,15 @@ public class Player extends AbstractEntity {
     }
 
     public void rotateLeft(float delta){
-        angularSpeed = 100;
+        angularSpeed = 300;
         float angle = angularSpeed * delta;
-        sprite.setOrigin(sprite.getWidth()/2, sprite.getHeight()/2);
         sprite.setRotation(sprite.getRotation() + angle);
     }
 
     public void rotateRight(float delta){
-        angularSpeed = -100;
+        angularSpeed = -300;
         float angle = angularSpeed * delta;
-        sprite.setOrigin(sprite.getWidth()/2, sprite.getHeight()/2);
         sprite.setRotation(sprite.getRotation() + angle);
-
     }
 
     @Override

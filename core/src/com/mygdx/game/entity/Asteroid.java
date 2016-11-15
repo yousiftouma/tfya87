@@ -15,7 +15,7 @@ public class Asteroid extends AbstractEntity {
     }
 
     @Override
-    public EntityType GetEntityType() {
+    public EntityType getEntityType() {
         return EntityType.ASTEROID;
     }
 

@@ -28,6 +28,7 @@ public abstract class AbstractEntity {
 
         sprite.setPosition(position.x, position.y);
         sprite.setSize(size.x, size.y);
+        // potentially needs to be position x, y and size x, y
         this.hitBox = new Rectangle(sprite.getX(), sprite.getY(), sprite.getWidth(), sprite.getHeight());
     }
 
@@ -76,14 +77,18 @@ public abstract class AbstractEntity {
         return position;
     }
 
-    public float getDirection(){
-        return sprite.getRotation();
-    }
-
     public void setPosition(Vector2 position) {
         this.position = position;
         sprite.setPosition(position.x, position.y);
         hitBox.setPosition(sprite.getX(), sprite.getY());
+    }
+
+    public float getDirection(){
+        return sprite.getRotation();
+    }
+
+    public void setOriginCenter() {
+        sprite.setOrigin(size.x/2, size.y/2);
     }
 
     public Vector2 getSize() {

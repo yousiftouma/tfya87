@@ -8,6 +8,9 @@ import com.badlogic.gdx.math.Vector2;
  */
 public class Player extends AbstractEntity {
 
+    private Sprite sprite;
+    private int angularSpeed;
+
     public Player(Sprite sprite, Vector2 position, Vector2 size, Vector2 velocity, Vector2 acceleration,
                   double mass) {
         super(sprite, position, size, velocity, acceleration, mass);
@@ -16,6 +19,18 @@ public class Player extends AbstractEntity {
         float newY = position.y - size.y/2;
         this.setPosition(new Vector2(newX, newY));
         this.setOriginCenter();
+    }
+
+    public void rotateLeft(float delta){
+        angularSpeed = 300;
+        float angle = angularSpeed * delta;
+        sprite.setRotation(sprite.getRotation() + angle);
+    }
+
+    public void rotateRight(float delta){
+        angularSpeed = -300;
+        float angle = angularSpeed * delta;
+        sprite.setRotation(sprite.getRotation() + angle);
     }
 
     @Override

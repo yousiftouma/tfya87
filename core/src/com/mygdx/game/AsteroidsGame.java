@@ -1,6 +1,8 @@
 package com.mygdx.game;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
@@ -21,10 +23,11 @@ public class AsteroidsGame {
     private static final float LEVEL_TIME = 30.0f;
     private static final float MAX_DELTA = 0.1f;
     public final static Vector2 ASTEROIDS_SIZE = new Vector2(64,64);
-
     private float timeBetweenAsteroids = 5.0f;
     private float timeToNewLevel = LEVEL_TIME;
     private float timeToNewAsteroids = 5.0f;
+    private float timeToNewMissile = 1.0f;
+    private float timeBetweenMissiles = 1.0f;
     private Player player;
     private ArrayList<AbstractEntity> entities;
     private IAsteroidsFactory asteroidsFactory;
@@ -47,7 +50,7 @@ public class AsteroidsGame {
         spawnAsteroids(delta);
         changeLevel(delta);
         updatePositions(delta);
-
+        handleMovement(delta);
         ArrayList<CollisionPair> collisionPairs = CollisionDetector.getCollisionPairs(entities);
 
     }
@@ -91,4 +94,22 @@ public class AsteroidsGame {
     public boolean isGameOver() {
         return gameOver;
     }
+
+    private void handleMovement(float delta){
+
+        if (Gdx.input.isKeyPressed(Keys.LEFT)){
+            player.rotateLeft(delta);
+        }
+        if (Gdx.input.isKeyPressed(Keys.RIGHT)){
+            player.rotateRight(delta);
+        }
+        timeToNewMissile -= delta;
+        if(Gdx.input.isKeyJustPressed(Keys.SPACE) && timeToNewMissile <= 0){
+            entities.add(0, missileFactory.createMissile(player.getPosition(), player.getDirection()));
+            timeToNewMissile = timeBetweenMissiles;
+        }
+
+
+    }
+
 }

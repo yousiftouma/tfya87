@@ -84,7 +84,15 @@ public abstract class AbstractEntity {
     }
 
     public float getDirection(){
-        return sprite.getRotation();
+        while (sprite.getRotation() < 0){
+            sprite.setRotation(360 - sprite.getRotation());
+        }
+        return sprite.getRotation() % 360;
+    }
+
+    public void setDirection(float angle){
+        while (angle < 0 ) angle = 360-Math.abs(angle);
+        sprite.setRotation(angle % 360);
     }
 
     public void setOriginCenter() {

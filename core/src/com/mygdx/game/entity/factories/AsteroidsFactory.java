@@ -31,9 +31,9 @@ public class AsteroidsFactory implements IAsteroidsFactory {
     }
 
     @Override
-    public Asteroid createAsteroidsFromCollision(Vector2 size, Vector2 pos) {
+    public Asteroid createAsteroidsFromCollision(Vector2 size, Vector2 pos, Vector2 velocity) {
         Sprite sprite = new Sprite(asteroidTexture);
-        Vector2 velocity = new Vector2(80,80);
+
         Vector2 acc = new Vector2(0,0);
         double mass = 3 * size.x * size.y;
         return new Asteroid(sprite, pos, size, velocity, acc, mass);

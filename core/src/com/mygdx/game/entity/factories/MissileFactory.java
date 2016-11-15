@@ -24,10 +24,12 @@ public class MissileFactory implements IMissileFactory {
         //TODO need to implement logic for shooting the missile
         Sprite sprite = new Sprite(missileTexture);
         sprite.setRotation(direction);
+
         Vector2 size = new Vector2(20,20);
+        Vector2 adjustedPosition = new Vector2(position.x + size.x/2, position.y + size.y/2);
         Vector2 velocity = new Vector2(50,30);
         Vector2 acc = new Vector2(0,0);
-        return new Missile(sprite, position, size, velocity, acc, 0);
+        return new Missile(sprite, adjustedPosition, size, velocity, acc, 0);
 
     }
 }

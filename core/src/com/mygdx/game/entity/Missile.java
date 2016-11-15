@@ -11,6 +11,7 @@ public class Missile extends AbstractEntity {
     public Missile(Sprite sprite, Vector2 position, Vector2 size, Vector2 velocity, Vector2 acceleration,
                    double mass) {
         super(sprite, position, size, velocity, acceleration, mass);
+        this.setOriginCenter();
     }
 
     @Override

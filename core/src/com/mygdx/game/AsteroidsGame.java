@@ -43,7 +43,6 @@ public class AsteroidsGame {
 
     public void updateGame(float delta) {
         if (delta >= MAX_DELTA) delta = MAX_DELTA;
-
         spawnAsteroids(delta);
         changeLevel(delta);
         updatePositions(delta);

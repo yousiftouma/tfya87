@@ -16,7 +16,6 @@ public class MissileFactory implements IMissileFactory {
 
     public MissileFactory(){
         missileTexture = new Texture(Gdx.files.internal("fireball.png"));
-
     }
 
     @Override

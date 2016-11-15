@@ -31,7 +31,7 @@ public abstract class AbstractEntity {
         this.hitBox = new Rectangle(sprite.getX(), sprite.getY(), sprite.getWidth(), sprite.getHeight());
     }
 
-    public abstract EntityType GetEntityType();
+    public abstract EntityType getEntityType();
 
     public void draw (Batch batch) {
         sprite.draw(batch);

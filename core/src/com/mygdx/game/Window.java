@@ -40,7 +40,7 @@ public class Window extends ApplicationAdapter {
             game.updateGame(delta);
         }
         else{
-            System.exit(0);
+            Gdx.app.exit();
         }
     }
 

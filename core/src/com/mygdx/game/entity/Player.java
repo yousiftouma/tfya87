@@ -33,7 +33,7 @@ public class Player extends AbstractEntity {
     }
 
     @Override
-    public EntityType GetEntityType() {
+    public EntityType getEntityType() {
         return EntityType.PLAYER;
     }
 }

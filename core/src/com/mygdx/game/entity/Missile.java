@@ -14,7 +14,7 @@ public class Missile extends AbstractEntity {
     }
 
     @Override
-    public EntityType GetEntityType() {
+    public EntityType getEntityType() {
         return EntityType.MISSILE;
     }
 }

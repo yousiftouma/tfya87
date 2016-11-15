@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.entity.AbstractEntity;
+import com.mygdx.game.entity.EntityType;
 import com.mygdx.game.entity.Player;
 import com.mygdx.game.entity.factories.AsteroidsFactory;
 import com.mygdx.game.entity.factories.IAsteroidsFactory;
@@ -52,7 +53,59 @@ public class AsteroidsGame {
         updatePositions(delta);
         handleMovement(delta);
         ArrayList<CollisionPair> collisionPairs = CollisionDetector.getCollisionPairs(entities);
+        checkCollision(collisionPairs);
+    }
 
+    private void checkCollision(ArrayList<CollisionPair> collisionPairs) {
+        for (CollisionPair collisionPair : collisionPairs) {
+            AbstractEntity e1 = collisionPair.getE1();
+            AbstractEntity e2 = collisionPair.getE2();
+
+            if (e1.getEntityType() == EntityType.ASTEROID) {
+                switch (e2.getEntityType()) {
+                    case ASTEROID:
+                        break;
+                    case MISSILE:
+                        missileAsteroidCollision(e2, e1);
+                        break;
+                    case PLAYER:
+                        gameOver = true;
+                        break;
+                    default:
+                        break;
+                }
+            } else if (e1.getEntityType() == EntityType.PLAYER) {
+                switch (e2.getEntityType()) {
+                    case ASTEROID:
+                        gameOver = true;
+                        break;
+                    default:
+                        break;
+                }
+            } else if (e1.getEntityType() == EntityType.MISSILE) {
+                switch (e2.getEntityType()) {
+                    case ASTEROID:
+                        missileAsteroidCollision(e1, e2);
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+    }
+
+    private void missileAsteroidCollision(AbstractEntity missile, AbstractEntity asteroid) {
+        float posX = asteroid.getPosition().x;
+        float posY = asteroid.getPosition().y;
+        float sizeX = asteroid.getSize().x;
+
+        entities.remove(missile);
+        entities.remove(asteroid);
+
+        if(sizeX != 16){
+            entities.add(asteroidsFactory.createAsteroidsFromCollision(new Vector2(sizeX / 2, sizeX / 2), new Vector2(posX, posY)));
+            entities.add(asteroidsFactory.createAsteroidsFromCollision(new Vector2(sizeX / 2, sizeX / 2), new Vector2(posX, posY)));
+        }
     }
 
     private void updatePositions(final float delta){

@@ -42,17 +42,48 @@ public class AsteroidsGame {
         this.gameOver = false;
         entities.add(player);
         entities.add(asteroidsFactory.createAsteroid(ASTEROIDS_SIZE));
+        entities.add(asteroidsFactory.createAsteroid(ASTEROIDS_SIZE));
     }
 
     public void updateGame(float delta) {
         if (delta >= MAX_DELTA) delta = MAX_DELTA;
         
-        spawnAsteroids(delta);
+        //spawnAsteroids(delta);
         changeLevel(delta);
         updatePositions(delta);
         handleMovement(delta);
+        updateGravity();
         ArrayList<CollisionPair> collisionPairs = CollisionDetector.getCollisionPairs(entities);
 
+    }
+
+    private void updateGravity() {
+        for (int i = 0; i < entities.size(); i++) {
+            AbstractEntity e1 = entities.get(i);
+            double massE1 = e1.getMass();
+            Vector2 posE1 = e1.getPosition();
+            for (int j = i + 1; j < entities.size(); j++) {
+                AbstractEntity e2 = entities.get(j);
+                double massE2 = entities.get(j).getMass();
+                Vector2 posE2 = entities.get(j).getPosition();
+
+                double distance = Math.sqrt((Math.pow((posE1.x - posE2.x), 2)) + (Math.pow((posE1.y - posE2.y), 2)));
+                float gravity = (float) ((massE1 * massE2) / (distance * 50000));
+/*
+                Vector2 newVelocityE1;
+                Vector2 newVelocityE2;
+                if (posE1.x - posE2.x < 0 && e1.getVelocity().x > 0) {
+                    if (posE1.y - posE2.y < 0 && e1.getVelocity().y > 0) {
+                        newVelocityE1 = new Vector2(e1.getVelocity().x + gravity, e1.getVelocity().y - gravity);
+                        newVelocityE2 = new Vector2(e2.getVelocity().x - gravity, e2.getVelocity().y - gravity);
+                        e1.setVelocity(newVelocityE1);
+                        e2.setVelocity(newVelocityE2);
+                    }
+                    System.out.println(gravity);
+                }
+                */
+            }
+        }
     }
 
     private void updatePositions(final float delta){

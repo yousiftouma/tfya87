@@ -26,6 +26,7 @@ public class AsteroidsGame {
     private static final float LEVEL_TIME = 30.0f;
     private static final float MAX_DELTA = 0.1f;
     public final static Vector2 ASTEROIDS_SIZE = new Vector2(64,64);
+    public static final float MISSILE_DELAY = 1.0f;
     private float timeBetweenAsteroids = 5.0f;
     private float timeToNewLevel = LEVEL_TIME;
     private float timeToNewAsteroids = 5.0f;
@@ -178,7 +179,7 @@ public class AsteroidsGame {
         timeToNewMissile -= delta;
         if(Gdx.input.isKeyJustPressed(Keys.SPACE) && timeToNewMissile <= 0){
             entities.add(0, missileFactory.createMissile(player.getPosition(), player.getDirection()));
-            timeToNewMissile = timeBetweenMissiles;
+            timeToNewMissile = MISSILE_DELAY;
         }
 
 

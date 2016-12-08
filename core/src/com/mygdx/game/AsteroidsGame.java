@@ -27,6 +27,7 @@ public class AsteroidsGame {
     private static final float MAX_DELTA = 0.1f;
     public final static Vector2 ASTEROIDS_SIZE = new Vector2(64,64);
     public static final float MISSILE_DELAY = 0.3f;
+    private static final double GRAV_CONSTANT = Math.pow(6.674*10.0, -11.0);
     private float timeBetweenAsteroids = 5.0f;
     private float timeToNewLevel = LEVEL_TIME;
     private float timeToNewAsteroids = 5.0f;
@@ -44,8 +45,7 @@ public class AsteroidsGame {
         this.player = getPlayer();
         this.gameOver = false;
         entities.add(player);
-        entities.add(asteroidsFactory.createAsteroid(ASTEROIDS_SIZE));
-        entities.add(asteroidsFactory.createAsteroid(ASTEROIDS_SIZE));
+        entities.add(asteroidsFactory.createAsteroid(ASTEROIDS_SIZE);
     }
 
     public void updateGame(float delta) {
@@ -137,28 +137,39 @@ public class AsteroidsGame {
     private void updateGravity() {
         for (int i = 0; i < entities.size(); i++) {
             AbstractEntity e1 = entities.get(i);
+            if (e1.getEntityType() != EntityType.ASTEROID) continue;
             double massE1 = e1.getMass();
             Vector2 posE1 = e1.getPosition();
-            for (int j = i + 1; j < entities.size(); j++) {
+            System.out.println("-------------Starting checking e1 to rest---------");
+            Vector2 newAcc = new Vector2(0,0);
+            for (int j = 0; j < entities.size(); j++) {
                 AbstractEntity e2 = entities.get(j);
-                double massE2 = entities.get(j).getMass();
-                Vector2 posE2 = entities.get(j).getPosition();
+                if (e2.getEntityType() != EntityType.ASTEROID) continue;
+                if (e2 == e1) continue;
+                double massE2 = e2.getMass();
+                Vector2 posE2 = e2.getPosition();
 
-                double distance = Math.sqrt((Math.pow((posE1.x - posE2.x), 2)) + (Math.pow((posE1.y - posE2.y), 2)));
-                float gravity = (float) ((massE1 * massE2) / (distance * 50000));
-/*
-                Vector2 newVelocityE1;
-                Vector2 newVelocityE2;
-                if (posE1.x - posE2.x < 0 && e1.getVelocity().x > 0) {
-                    if (posE1.y - posE2.y < 0 && e1.getVelocity().y > 0) {
-                        newVelocityE1 = new Vector2(e1.getVelocity().x + gravity, e1.getVelocity().y - gravity);
-                        newVelocityE2 = new Vector2(e2.getVelocity().x - gravity, e2.getVelocity().y - gravity);
-                        e1.setVelocity(newVelocityE1);
-                        e2.setVelocity(newVelocityE2);
+                double x = posE2.x - posE1.x;
+                double y = posE2.y - posE1.y;
+                if (Math.abs(y/x) != Math.asin(1)){
+                    double angle = Math.toDegrees(Math.atan(y/x));
+
+                    double distance = Math.sqrt((Math.pow((posE1.x - posE2.x), 2)) + (Math.pow((posE1.y - posE2.y), 2)));
+                    double gravity = ((massE1*massE2*GRAV_CONSTANT) / (distance*distance));
+                    double acc = gravity/massE1;
+                    double accX = acc*Math.cos(Math.toRadians(angle));
+                    double accY = acc*Math.sin(Math.toRadians(angle));
+
+                    if ((x < 0 && y >= 0) || (x < 0 && y < 0)) {
+                        accX *= -1;
+                        accY *= -1;
                     }
-                    System.out.println(gravity);
+                    newAcc.add((float) accX, (float) accY);
+                    System.out.println("------------Finished checking this e2----------------");
                 }
-                */
+                e1.setAcceleration(newAcc);
+                System.out.println("new acc is " + e1.getAcceleration());
+                System.out.println("------Finished checking e1 with rest--------");
             }
         }
     }

@@ -26,12 +26,11 @@ public class AsteroidsGame {
     private static final float LEVEL_TIME = 30.0f;
     private static final float MAX_DELTA = 0.1f;
     public final static Vector2 ASTEROIDS_SIZE = new Vector2(64,64);
-    public static final float MISSILE_DELAY = 1.0f;
+    public static final float MISSILE_DELAY = 0.3f;
     private float timeBetweenAsteroids = 5.0f;
     private float timeToNewLevel = LEVEL_TIME;
     private float timeToNewAsteroids = 5.0f;
     private float timeToNewMissile = 0.0f;
-    private float timeBetweenMissiles = 0.0f;
     private Player player;
     private ArrayList<AbstractEntity> entities;
     private IAsteroidsFactory asteroidsFactory;
@@ -82,6 +81,7 @@ public class AsteroidsGame {
             if (e1.getEntityType() == EntityType.ASTEROID) {
                 switch (e2.getEntityType()) {
                     case ASTEROID:
+                        asteroidAsteroidCollision(e2, e1);
                         break;
                     case MISSILE:
                         missileAsteroidCollision(e2, e1);
@@ -110,6 +110,10 @@ public class AsteroidsGame {
                 }
             }
         }
+    }
+
+    private void asteroidAsteroidCollision(AbstractEntity a1, AbstractEntity a2) {
+        
     }
 
     private void missileAsteroidCollision(AbstractEntity missile, AbstractEntity asteroid) {

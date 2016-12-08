@@ -36,7 +36,7 @@ public class MissileFactory implements IMissileFactory {
     private Vector2 getVelocity (Vector2 position, float direction) {
         Vector2 velocity = new Vector2();
         Vector2 target = getTarget(direction);
-        velocity.set(target.x - position.x, target.y - position.y).nor().scl(100);
+        velocity.set(target.x - position.x, target.y - position.y).nor().scl(1000);
         return velocity;
     }
 

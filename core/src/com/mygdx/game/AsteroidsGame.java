@@ -45,7 +45,7 @@ public class AsteroidsGame {
         this.player = getPlayer();
         this.gameOver = false;
         entities.add(player);
-        entities.add(asteroidsFactory.createAsteroid(ASTEROIDS_SIZE);
+        entities.add(asteroidsFactory.createAsteroid(ASTEROIDS_SIZE));
     }
 
     public void updateGame(float delta) {

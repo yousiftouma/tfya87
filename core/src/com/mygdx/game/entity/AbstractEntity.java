@@ -28,10 +28,11 @@ public abstract class AbstractEntity {
 
         sprite.setPosition(position.x, position.y);
         sprite.setSize(size.x, size.y);
+        // potentially needs to be position x, y and size x, y
         this.hitBox = new Rectangle(sprite.getX(), sprite.getY(), sprite.getWidth(), sprite.getHeight());
     }
 
-    public abstract EntityType GetEntityType();
+    public abstract EntityType getEntityType();
 
     public void draw (Batch batch) {
         sprite.draw(batch);
@@ -76,14 +77,26 @@ public abstract class AbstractEntity {
         return position;
     }
 
-    public float getDirection(){
-        return sprite.getRotation();
-    }
-
     public void setPosition(Vector2 position) {
         this.position = position;
         sprite.setPosition(position.x, position.y);
         hitBox.setPosition(sprite.getX(), sprite.getY());
+    }
+
+    public float getDirection(){
+        while (sprite.getRotation() < 0){
+            sprite.setRotation(360 - sprite.getRotation());
+        }
+        return sprite.getRotation() % 360;
+    }
+
+    public void setDirection(float angle){
+        while (angle < 0 ) angle = 360-Math.abs(angle);
+        sprite.setRotation(angle % 360);
+    }
+
+    public void setOriginCenter() {
+        sprite.setOrigin(size.x/2, size.y/2);
     }
 
     public Vector2 getSize() {

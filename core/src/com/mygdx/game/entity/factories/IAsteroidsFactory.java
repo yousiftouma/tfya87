@@ -9,4 +9,5 @@ import com.mygdx.game.entity.Asteroid;
  */
 public interface IAsteroidsFactory {
     Asteroid createAsteroid(Vector2 size);
+    Asteroid createAsteroidsFromCollision(Vector2 size, Vector2 pos, Vector2 velocity);
 }

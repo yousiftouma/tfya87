@@ -2,13 +2,12 @@ package com.mygdx.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.entity.AbstractEntity;
+import com.mygdx.game.entity.Asteroid;
 import com.mygdx.game.entity.EntityType;
-import com.mygdx.game.entity.Missile;
 import com.mygdx.game.entity.Player;
 import com.mygdx.game.entity.factories.AsteroidsFactory;
 import com.mygdx.game.entity.factories.IAsteroidsFactory;
@@ -27,7 +26,7 @@ public class AsteroidsGame {
     private static final float MAX_DELTA = 0.1f;
     public final static Vector2 ASTEROIDS_SIZE = new Vector2(64,64);
     public static final float MISSILE_DELAY = 0.3f;
-    private static final double GRAV_CONSTANT = Math.pow(6.674*10.0, -11.0);
+    private static final double GRAVITY_CONSTANT = Math.pow(6.674*10.0, -11.0);
     private float timeBetweenAsteroids = 5.0f;
     private float timeToNewLevel = LEVEL_TIME;
     private float timeToNewAsteroids = 5.0f;
@@ -45,22 +44,23 @@ public class AsteroidsGame {
         this.player = getPlayer();
         this.gameOver = false;
         entities.add(player);
-        entities.add(asteroidsFactory.createAsteroid(ASTEROIDS_SIZE));
+        entities.add(asteroidsFactory.createAsteroid(ASTEROIDS_SIZE, new Vector2(300, 300)));
+        entities.add(asteroidsFactory.createAsteroid(ASTEROIDS_SIZE, new Vector2(200,200)));
     }
 
     public void updateGame(float delta) {
         if (delta >= MAX_DELTA) delta = MAX_DELTA;
         //spawnAsteroids(delta);
         changeLevel(delta);
-        checkOutsideMissiles();
+        removeDisappearedMissiles();
         updatePositions(delta);
         handleMovement(delta);
         updateGravity();
         ArrayList<CollisionPair> collisionPairs = CollisionDetector.getCollisionPairs(entities);
-        checkCollision(collisionPairs);
+        handleCollisions(collisionPairs);
     }
 
-    private void checkOutsideMissiles() {
+    private void removeDisappearedMissiles() {
         Iterator<AbstractEntity> i = entities.iterator();
         while(i.hasNext()){
             AbstractEntity entity = i.next();
@@ -75,7 +75,7 @@ public class AsteroidsGame {
     }
 
 
-    private void checkCollision(ArrayList<CollisionPair> collisionPairs) {
+    private void handleCollisions(ArrayList<CollisionPair> collisionPairs) {
         for (CollisionPair collisionPair : collisionPairs) {
             AbstractEntity e1 = collisionPair.getE1();
             AbstractEntity e2 = collisionPair.getE2();
@@ -83,7 +83,7 @@ public class AsteroidsGame {
             if (e1.getEntityType() == EntityType.ASTEROID) {
                 switch (e2.getEntityType()) {
                     case ASTEROID:
-                        asteroidAsteroidCollision(e2, e1);
+                        asteroidAsteroidCollision(e1, e2);
                         break;
                     case MISSILE:
                         missileAsteroidCollision(e2, e1);
@@ -115,7 +115,23 @@ public class AsteroidsGame {
     }
 
     private void asteroidAsteroidCollision(AbstractEntity a1, AbstractEntity a2) {
-        
+        float newVelX1 = (float) (a1.getVelocity().x * (a1.getMass() - a2.getMass()) +
+                (2 * a2.getMass() * a2.getVelocity().x))
+                / (float) (a1.getMass() + a2.getMass());
+
+        float newVelY1 = (float) (a1.getVelocity().y * (a1.getMass() - a2.getMass()) +
+                (2 * a2.getMass() * a2.getVelocity().y))
+                / (float)(a1.getMass() + a2.getMass());
+
+        float newVelX2 = (float) (a2.getVelocity().x * (a2.getMass() - a1.getMass()) +
+                (2 * a1.getMass() * a1.getVelocity().x))
+                / (float) (a1.getMass() + a2.getMass());
+        float newVelY2 = (float) (a2.getVelocity().y * (a2.getMass() - a1.getMass()) +
+                (2 * a1.getMass() * a1.getVelocity().y))
+                / (float) (a1.getMass() + a2.getMass());
+
+        a1.setVelocity(new Vector2(newVelX1, newVelY1));
+        a2.setVelocity(new Vector2(newVelX2, newVelY2));
     }
 
     private void missileAsteroidCollision(AbstractEntity missile, AbstractEntity asteroid) {
@@ -124,13 +140,14 @@ public class AsteroidsGame {
         float velocityX = asteroid.getVelocity().x;
         float velocityY = asteroid.getVelocity().y;
         float sizeX = asteroid.getSize().x;
+        float sizeY = asteroid.getSize().y;
 
         entities.remove(missile);
         entities.remove(asteroid);
 
         if(sizeX != 16){
-            entities.add(asteroidsFactory.createAsteroidsFromCollision(new Vector2(sizeX / 2, sizeX / 2), new Vector2(posX, posY), new Vector2(-velocityX, velocityY)));
-            entities.add(asteroidsFactory.createAsteroidsFromCollision(new Vector2(sizeX / 2, sizeX / 2), new Vector2(posX, posY),new Vector2(velocityX, -velocityY)));
+            entities.add(asteroidsFactory.createAsteroidsFromCollision(new Vector2(sizeX / 2, sizeX / 2), new Vector2(posX-sizeX/4, posY+sizeY/4), new Vector2(-velocityX, velocityY)));
+            entities.add(asteroidsFactory.createAsteroidsFromCollision(new Vector2(sizeX / 2, sizeX / 2), new Vector2(posX+sizeX/4, posY-sizeY/4),new Vector2(velocityX, -velocityY)));
         }
     }
 
@@ -154,8 +171,8 @@ public class AsteroidsGame {
                 if (Math.abs(y/x) != Math.asin(1)){
                     double angle = Math.toDegrees(Math.atan(y/x));
 
-                    double distance = Math.sqrt((Math.pow((posE1.x - posE2.x), 2)) + (Math.pow((posE1.y - posE2.y), 2)));
-                    double gravity = ((massE1*massE2*GRAV_CONSTANT) / (distance*distance));
+                    double distance = ((Asteroid)e1).distanceTo((Asteroid)e2);
+                    double gravity = ((massE1*massE2* GRAVITY_CONSTANT) / (distance*distance));
                     double acc = gravity/massE1;
                     double accX = acc*Math.cos(Math.toRadians(angle));
                     double accY = acc*Math.sin(Math.toRadians(angle));

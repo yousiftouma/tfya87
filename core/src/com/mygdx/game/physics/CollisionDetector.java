@@ -1,6 +1,8 @@
 package com.mygdx.game.physics;
 
 import com.mygdx.game.entity.AbstractEntity;
+import com.mygdx.game.entity.Asteroid;
+import com.mygdx.game.entity.EntityType;
 
 import java.util.ArrayList;
 
@@ -16,12 +18,26 @@ public class CollisionDetector {
             for (int j = i+1; j < entities.size(); j++) {
                 AbstractEntity e2 = entities.get(j);
                 if (e1.getHitBox().overlaps(e2.getHitBox())){
-                    CollisionPair pair = new CollisionPair(e1, e2);
-                    collisionPairs.add(pair);
+                    if (e1.getEntityType() == EntityType.ASTEROID && e2.getEntityType() == EntityType.ASTEROID){
+                        if (isProperCollision((Asteroid)e1,(Asteroid)e2)){
+                            CollisionPair pair = new CollisionPair(e1, e2);
+                            collisionPairs.add(pair);
+                        }
+                    }
+                    else {
+                        CollisionPair pair = new CollisionPair(e1, e2);
+                        collisionPairs.add(pair);
+                    }
                 }
             }
         }
         return collisionPairs;
+    }
+
+    private static boolean isProperCollision(Asteroid a1, Asteroid a2) {
+        double distance = a1.distanceTo(a2);
+        if (distance <= a1.getRadius() + a2.getRadius()) return true;
+        return false;
     }
 
 

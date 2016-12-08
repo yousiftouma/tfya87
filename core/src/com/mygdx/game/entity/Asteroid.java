@@ -45,6 +45,24 @@ public class Asteroid extends AbstractEntity {
         }
 
     }
+
+    public float getRadius() {
+        return this.getSize().x/2;
+    }
+
+    public double distanceTo(Asteroid a2){
+        float radiusA1 = this.getRadius();
+        float radiusA2 = a2.getRadius();
+        float centerOfA1X = this.getPosition().x + radiusA1;
+        float centerOfA1Y = this.getPosition().y + radiusA1;
+        float centerOfA2X = a2.getPosition().x + radiusA2;
+        float centerOfA2Y = a2.getPosition().y + radiusA2;
+
+        float a = centerOfA1X - centerOfA2X;
+        float b = centerOfA1Y - centerOfA2Y;
+
+        return Math.sqrt(Math.pow(a, 2) + Math.pow(b, 2));
+    }
 }
 
 

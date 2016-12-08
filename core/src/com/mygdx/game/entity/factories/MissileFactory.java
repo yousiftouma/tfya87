@@ -70,7 +70,7 @@ public class MissileFactory implements IMissileFactory {
         else if (direction <= 270) {
             target.y = 0;
             double doubleX = AsteroidsGame.GAME_HEIGHT/2 * Math.tan(Math.toRadians(270-direction));
-            target.x = AsteroidsGame.GAME_WIDTH - (float) doubleX;
+            target.x = AsteroidsGame.GAME_WIDTH/2 - (float) doubleX;
         }
         else if (direction <= 315) {
             target.y = 0;

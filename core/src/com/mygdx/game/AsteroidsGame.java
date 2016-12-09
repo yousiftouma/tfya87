@@ -44,7 +44,8 @@ public class AsteroidsGame {
         this.player = getPlayer();
         this.gameOver = false;
         entities.add(player);
-        entities.add(asteroidsFactory.createAsteroid(ASTEROIDS_SIZE));
+        entities.add(asteroidsFactory.createAsteroid(ASTEROIDS_SIZE, new Vector2(300,300)));
+        entities.add(asteroidsFactory.createAsteroid(ASTEROIDS_SIZE, new Vector2(200,200)));
     }
 
     public void updateGame(float delta) {
@@ -52,9 +53,9 @@ public class AsteroidsGame {
         spawnAsteroids(delta);
         changeLevel(delta);
         removeDisappearedMissiles();
-        updatePositions(delta);
-        handleMovement(delta);
-        updateGravity();
+	setGravitationalForces();
+	updatePositions(delta);
+	handleMovement(delta);
         ArrayList<CollisionPair> collisionPairs = CollisionDetector.getCollisionPairs(entities);
         handleCollisions(collisionPairs);
     }
@@ -82,7 +83,7 @@ public class AsteroidsGame {
             if (e1.getEntityType() == EntityType.ASTEROID) {
                 switch (e2.getEntityType()) {
                     case ASTEROID:
-                        asteroidAsteroidCollision(e1, e2);
+                        asteroidAsteroidCollision((Asteroid)e1, (Asteroid)e2);
                         break;
                     case MISSILE:
                         missileAsteroidCollision(e2, e1);
@@ -113,9 +114,10 @@ public class AsteroidsGame {
         }
     }
 
-    private void asteroidAsteroidCollision(AbstractEntity a1, AbstractEntity a2) {
+    private void asteroidAsteroidCollision(Asteroid a1, Asteroid a2) {
 
         // separate rocks by reversing until just not overlapping
+	/*
         for (float step = 0.00001f; step < MAX_DELTA; step+=0.00001f) {
             Vector2 a1pos = a1.getPosition();
             Vector2 a1vel = a1.getVelocity();
@@ -131,6 +133,30 @@ public class AsteroidsGame {
                 break;
             }
         }
+
+	Vector2 a1Acc = a1.getAcceleration(); a1Acc.x = 0; a1Acc.y = 0;
+	Vector2 a2Acc = a2.getAcceleration(); a2Acc.x = 0; a2Acc.y = 0;
+	 */
+
+	/*
+	float circle1X = a1.getPosition().x + a1.getRadius();
+	float circle1Y = a1.getPosition().y + a1.getRadius();
+	float circle2X = a2.getPosition().x + a2.getRadius();
+	float circle2Y = a2.getPosition().y + a2.getRadius();
+	float midpointX = (circle1X + circle2X) /2;
+	float midpointY = (circle1Y + circle2Y) /2;
+
+	Vector2 a1Pos = a1.getPosition();
+	Vector2 a2Pos = a2.getPosition();
+	float dist = (float) a1.distanceTo(a2);
+
+	a1Pos.x = (midpointX + a1.getRadius() * (circle1X - circle2X) / dist) - a1.getRadius();
+	a1Pos.y = (midpointY + a1.getRadius() * (circle1Y - circle2Y) / dist) - a1.getRadius();
+	a2Pos.x = (midpointX + a2.getRadius() * (circle2X - circle1X) / dist) - a2.getRadius();
+	a2Pos.y = (midpointY + a2.getRadius() * (circle2Y - circle1Y) / dist) - a2.getRadius();
+	*/
+	a1.separateSide(a2);
+	a2.separateSide(a1);
 
         float newVelX1 = (float) (a1.getVelocity().x * (a1.getMass() - a2.getMass()) +
                 (2 * a2.getMass() * a2.getVelocity().x))
@@ -176,7 +202,7 @@ public class AsteroidsGame {
         }
     }
 
-    private void updateGravity() {
+    private void setGravitationalForces() {
         for (int i = 0; i < entities.size(); i++) {
             AbstractEntity e1 = entities.get(i);
             if (e1.getEntityType() != EntityType.ASTEROID) continue;

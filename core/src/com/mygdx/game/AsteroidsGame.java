@@ -44,13 +44,12 @@ public class AsteroidsGame {
         this.player = getPlayer();
         this.gameOver = false;
         entities.add(player);
-        entities.add(asteroidsFactory.createAsteroid(ASTEROIDS_SIZE, new Vector2(300, 300)));
-        entities.add(asteroidsFactory.createAsteroid(ASTEROIDS_SIZE, new Vector2(200,200)));
+        entities.add(asteroidsFactory.createAsteroid(ASTEROIDS_SIZE));
     }
 
     public void updateGame(float delta) {
         if (delta >= MAX_DELTA) delta = MAX_DELTA;
-        //spawnAsteroids(delta);
+        spawnAsteroids(delta);
         changeLevel(delta);
         removeDisappearedMissiles();
         updatePositions(delta);
@@ -89,7 +88,7 @@ public class AsteroidsGame {
                         missileAsteroidCollision(e2, e1);
                         break;
                     case PLAYER:
-                        //gameOver = true;
+                        gameOver = true;
                         break;
                     default:
                         break;
@@ -97,7 +96,7 @@ public class AsteroidsGame {
             } else if (e1.getEntityType() == EntityType.PLAYER) {
                 switch (e2.getEntityType()) {
                     case ASTEROID:
-                        //gameOver = true;
+                         gameOver = true;
                         break;
                     default:
                         break;
@@ -115,6 +114,24 @@ public class AsteroidsGame {
     }
 
     private void asteroidAsteroidCollision(AbstractEntity a1, AbstractEntity a2) {
+
+        // separate rocks by reversing until just not overlapping
+        for (float step = 0.00001f; step < MAX_DELTA; step+=0.00001f) {
+            Vector2 a1pos = a1.getPosition();
+            Vector2 a1vel = a1.getVelocity();
+            Vector2 a2pos = a2.getPosition();
+            Vector2 a2vel = a2.getPosition();
+            a1pos.x -= a1vel.x*step;
+            a1pos.y -= a1vel.y*step;
+            a2pos.x -= a2vel.x*step;
+            a2pos.y -= a2vel.y*step;
+
+            if (((Asteroid)a1).distanceTo((Asteroid)a2) >=
+                    ((Asteroid) a1).getRadius() + ((Asteroid) a2).getRadius() - 8) {
+                break;
+            }
+        }
+
         float newVelX1 = (float) (a1.getVelocity().x * (a1.getMass() - a2.getMass()) +
                 (2 * a2.getMass() * a2.getVelocity().x))
                 / (float) (a1.getMass() + a2.getMass());
@@ -145,9 +162,17 @@ public class AsteroidsGame {
         entities.remove(missile);
         entities.remove(asteroid);
 
+        Vector2 a1NewVel = asteroid.getVelocity().cpy();
+        Vector2 a2NewVel = asteroid.getVelocity().cpy();
+
+        a1NewVel.setAngle(a1NewVel.angle()+45);
+        a2NewVel.setAngle(a2NewVel.angle()-45);
+
         if(sizeX != 16){
-            entities.add(asteroidsFactory.createAsteroidsFromCollision(new Vector2(sizeX / 2, sizeX / 2), new Vector2(posX-sizeX/4, posY+sizeY/4), new Vector2(-velocityX, velocityY)));
-            entities.add(asteroidsFactory.createAsteroidsFromCollision(new Vector2(sizeX / 2, sizeX / 2), new Vector2(posX+sizeX/4, posY-sizeY/4),new Vector2(velocityX, -velocityY)));
+            entities.add(asteroidsFactory.createAsteroidsFromCollision(new Vector2(sizeX / 2, sizeX / 2),
+                    new Vector2(posX-sizeX/4, posY+sizeY/4), a1NewVel));
+            entities.add(asteroidsFactory.createAsteroidsFromCollision(new Vector2(sizeX / 2, sizeX / 2),
+                    new Vector2(posX+sizeX/4, posY-sizeY/4), a2NewVel));
         }
     }
 
@@ -157,7 +182,6 @@ public class AsteroidsGame {
             if (e1.getEntityType() != EntityType.ASTEROID) continue;
             double massE1 = e1.getMass();
             Vector2 posE1 = e1.getPosition();
-            System.out.println("-------------Starting checking e1 to rest---------");
             Vector2 newAcc = new Vector2(0,0);
             for (int j = 0; j < entities.size(); j++) {
                 AbstractEntity e2 = entities.get(j);
@@ -182,11 +206,8 @@ public class AsteroidsGame {
                         accY *= -1;
                     }
                     newAcc.add((float) accX, (float) accY);
-                    System.out.println("------------Finished checking this e2----------------");
                 }
                 e1.setAcceleration(newAcc);
-                System.out.println("new acc is " + e1.getAcceleration());
-                System.out.println("------Finished checking e1 with rest--------");
             }
         }
     }
@@ -211,7 +232,6 @@ public class AsteroidsGame {
     private void spawnAsteroids (final float delta){
         if (timeToNewAsteroids <= 0){
             entities.add(asteroidsFactory.createAsteroid(ASTEROIDS_SIZE));
-          //  entities.add(0,missileFactory.createMissile(player.getPosition(), player.getDirection()));
             timeToNewAsteroids = timeBetweenAsteroids;
         }else timeToNewAsteroids -= delta;
     }

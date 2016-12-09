@@ -36,7 +36,7 @@ public class CollisionDetector {
 
     private static boolean isProperCollision(Asteroid a1, Asteroid a2) {
         double distance = a1.distanceTo(a2);
-        if (distance <= a1.getRadius() + a2.getRadius()) return true;
+        if (distance <= a1.getRadius() + a2.getRadius() - 8) return true;
         return false;
     }
 

@@ -42,7 +42,6 @@ public class MissileFactory implements IMissileFactory {
 
     private Vector2 getTarget(float direction) {
         Vector2 target = new Vector2();
-        System.out.println("Shooting at angle " + direction);
         if (direction <= 45) {
             target.x = AsteroidsGame.GAME_WIDTH;
             double doubleY = target.x/2 * Math.tan(Math.toRadians(direction));
@@ -83,7 +82,6 @@ public class MissileFactory implements IMissileFactory {
             double doubleY = AsteroidsGame.GAME_WIDTH/2 * Math.tan(Math.toRadians(360-direction));
             target.y = AsteroidsGame.GAME_HEIGHT/2 - (float) doubleY;
         }
-        System.out.println(target);
         return target;
     }
 

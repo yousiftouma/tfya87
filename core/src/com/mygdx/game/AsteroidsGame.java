@@ -88,7 +88,7 @@ public class AsteroidsGame {
                         missileAsteroidCollision(e2, e1);
                         break;
                     case PLAYER:
-                        gameOver = true;
+                        //gameOver = true;
                         break;
                     default:
                         break;
@@ -96,7 +96,7 @@ public class AsteroidsGame {
             } else if (e1.getEntityType() == EntityType.PLAYER) {
                 switch (e2.getEntityType()) {
                     case ASTEROID:
-                         gameOver = true;
+                         //gameOver = true;
                         break;
                     default:
                         break;

@@ -44,7 +44,7 @@ public class AsteroidsFactory implements IAsteroidsFactory {
         Sprite sprite = new Sprite(asteroidTexture);
 
         Vector2 acc = new Vector2(0,0);
-        double mass = 3 * size.x * size.y;
+        double mass = 3*Math.pow(10, 22) * size.x * size.y;
         return new Asteroid(sprite, pos, size, velocity, acc, mass);
     }
 

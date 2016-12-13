@@ -18,7 +18,7 @@ public class AsteroidsFactory implements IAsteroidsFactory {
 
     public AsteroidsFactory() {
         random = new Random();
-        asteroidTexture = new Texture(Gdx.files.internal("asteroid.png"));
+        asteroidTexture = new Texture(Gdx.files.internal("asteroid_smaller.png"));
     }
 
     @Override

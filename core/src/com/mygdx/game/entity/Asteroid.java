@@ -26,6 +26,8 @@ public class Asteroid extends AbstractEntity {
     public void updatePosition(final float delta){
         super.updatePosition(delta);
 
+	// Teleportation
+
         // outside left
         if(this.getPosition().x < 0 - this.getSize().x){
             Vector2 position = new Vector2(AsteroidsGame.GAME_WIDTH, this.getPosition().y);
@@ -53,9 +55,11 @@ public class Asteroid extends AbstractEntity {
         return this.getSize().x/2;
     }
 
+    // Calculate using Pythagoras theorem
     public double distanceTo(Asteroid a2){
         float radiusA1 = this.getRadius();
         float radiusA2 = a2.getRadius();
+	// compensate for coordinate origins - move to center of asteroid
         float centerOfA1X = this.getPosition().x + radiusA1;
         float centerOfA1Y = this.getPosition().y + radiusA1;
         float centerOfA2X = a2.getPosition().x + radiusA2;
@@ -69,22 +73,14 @@ public class Asteroid extends AbstractEntity {
 
     /**
          * Seperates our Asteroid from the Asteroid we collided with, depending on
-         * what side we collided with
+         * which side we collided with
          * @param object object we collided with
          */
         public void separateSide(Asteroid object) {
 	    Side side = getCollisionSide(object);
             if (side == Side.TOP) {
-                //to avoid setting fallspeed to 0 if not actually on top
-//                if (velocity.y < 0) {
-//                    velocity.y = 0;
-//                }
                 setPosition(new Vector2(getPosition().x, object.getPosition().y + object.getSize().y));
             } else if (side == Side.BOTTOM) {
-                //to start falling upon collision with bottom
-//                if (velocity.y > 0) {
-//                    velocity.y = 0;
-//                }
                 setPosition(new Vector2(getPosition().x, object.getPosition().y - getSize().y));
             } else if (side == Side.LEFT) {
                 setPosition(new Vector2(object.getPosition().x - getSize().x, getPosition().y));

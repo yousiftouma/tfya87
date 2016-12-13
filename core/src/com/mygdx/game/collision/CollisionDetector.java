@@ -26,7 +26,7 @@ public final class CollisionDetector {
 
 		    CollisionPair pair = new CollisionPair(e1, e2);
 		    collisionPairs.add(pair);
-		    
+
 		    // uncomment section below and comment out section above to check collisions for asteroids as
 		    // if they were circles
 

@@ -24,42 +24,47 @@ public class Window extends ApplicationAdapter {
 
     @Override
     public void create () {
-        batch = new SpriteBatch();
-        game = new AsteroidsGame();
-        background = new Texture(Gdx.files.internal("Space.jpg"));
-        this.score = "";
-        this.scoreBmf = new BitmapFont();
-        this.time = 0f;
+	batch = new SpriteBatch();
+	game = new AsteroidsGame();
+	background = new Texture(Gdx.files.internal("Space.jpg"));
+	this.score = "";
+	this.scoreBmf = new BitmapFont();
+	this.time = 0f;
     }
 
     @Override
     public void render () {
-        final float delta = Gdx.graphics.getDeltaTime();
-        time += delta;
-        double timeToShow = Math.floor(time);
-        score = "Time survived: " + timeToShow;
-        Gdx.gl.glClearColor(1, 0, 0, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        batch.begin();
-        batch.draw(background, 0, 0);
+	Gdx.gl.glClearColor(1, 0, 0, 1);
+	Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+	batch.begin();
+	batch.draw(background, 0, 0);
 
-        if (!game.isGameOver()){
-            for (AbstractEntity entity : game.getEntities()) {
-                entity.draw(batch);
-            }
-            scoreBmf.setColor(1.0f, 1.0f, 1.0f, 1.0f);
-            scoreBmf.draw(batch, score, AsteroidsGame.GAME_WIDTH/2-85f, AsteroidsGame.GAME_HEIGHT-10f);
-            batch.end();
-            game.updateGame(delta);
-        }
-        else{
-            Gdx.app.exit();
-        }
+	if (!game.isGameOver()){
+	    final float delta = Gdx.graphics.getDeltaTime();
+	    time += delta;
+	    double timeToShow = Math.floor(time);
+	    score = "Time survived: " + timeToShow;
+	    for (AbstractEntity entity : game.getEntities()) {
+		entity.draw(batch);
+	    }
+	    scoreBmf.setColor(1.0f, 1.0f, 1.0f, 1.0f);
+	    scoreBmf.draw(batch, score, AsteroidsGame.GAME_WIDTH/2-85f, AsteroidsGame.GAME_HEIGHT-10f);
+	    batch.end();
+	    game.updateGame(delta);
+	}
+	else{
+	    String finalScore = score;
+	    scoreBmf.setColor(1.0f, 1.0f, 1.0f, 1.0f);
+	    scoreBmf.draw(batch, finalScore, AsteroidsGame.GAME_WIDTH/2-85f, AsteroidsGame.GAME_HEIGHT-10f);
+	    batch.end();
+	    this.pause();
+	    //Gdx.app.exit();
+	}
     }
 
     @Override
     public void dispose () {
-        batch.dispose();
-        background.dispose();
+	batch.dispose();
+	background.dispose();
     }
 }

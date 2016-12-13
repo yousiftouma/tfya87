@@ -97,7 +97,7 @@ public class AsteroidsGame {
                         missileAsteroidCollision(e2, e1);
                         break;
                     case PLAYER:
-                        //gameOver = true;
+                        gameOver = true;
                         break;
                     default:
                         break;
@@ -105,7 +105,7 @@ public class AsteroidsGame {
             } else if (e1.getEntityType() == EntityType.PLAYER) {
                 switch (e2.getEntityType()) {
                     case ASTEROID:
-                         //gameOver = true;
+                        gameOver = true;
                         break;
                     default:
                         break;
@@ -174,7 +174,7 @@ public class AsteroidsGame {
         a1NewVel.setAngle(a1NewVel.angle()+45);
         a2NewVel.setAngle(a2NewVel.angle()-45);
 
-        if(Math.abs(sizeX - ASTEROID_MIN_SIZE) <= EPS){
+        if(Math.abs(sizeX - ASTEROID_MIN_SIZE) >= EPS){
             entities.add(asteroidsFactory.createAsteroid(new Vector2(sizeX / 2, sizeX / 2),
 							 new Vector2(posX - sizeX / 4, posY + sizeY / 4), a1NewVel));
             entities.add(asteroidsFactory.createAsteroid(new Vector2(sizeX / 2, sizeX / 2),

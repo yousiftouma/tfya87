@@ -9,6 +9,7 @@ import com.badlogic.gdx.math.Vector2;
  * Created by youto814 on 03/11/16.
  */
 public abstract class AbstractEntity {
+    private static final int FULL_CIRCLE = 360;
     private Sprite sprite;
     private Vector2 position;
     private Vector2 size;
@@ -17,8 +18,7 @@ public abstract class AbstractEntity {
     private Vector2 acceleration;
     private double mass;
 
-    public AbstractEntity(Sprite sprite, Vector2 position, Vector2 size, Vector2 velocity, Vector2 acceleration,
-                          double mass) {
+    protected AbstractEntity(Sprite sprite, Vector2 position, Vector2 size, Vector2 velocity, Vector2 acceleration, double mass) {
         this.sprite = sprite;
         this.position = position;
         this.size = size;
@@ -28,7 +28,6 @@ public abstract class AbstractEntity {
 
         sprite.setPosition(position.x, position.y);
         sprite.setSize(size.x, size.y);
-        // potentially needs to be position x, y and size x, y
         this.hitBox = new Rectangle(sprite.getX(), sprite.getY(), sprite.getWidth(), sprite.getHeight());
     }
 
@@ -85,14 +84,14 @@ public abstract class AbstractEntity {
 
     public float getDirection(){
         while (sprite.getRotation() < 0){
-            sprite.setRotation(360 - sprite.getRotation());
+            sprite.setRotation(FULL_CIRCLE - sprite.getRotation());
         }
-        return sprite.getRotation() % 360;
+        return sprite.getRotation() % FULL_CIRCLE;
     }
 
     public void setDirection(float angle){
-        while (angle < 0 ) angle = 360-Math.abs(angle);
-        sprite.setRotation(angle % 360);
+        while (angle < 0 ) angle = FULL_CIRCLE-Math.abs(angle);
+        sprite.setRotation(angle % FULL_CIRCLE);
     }
 
     public void setOriginCenter() {

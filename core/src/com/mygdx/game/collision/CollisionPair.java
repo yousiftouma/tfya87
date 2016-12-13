@@ -1,4 +1,4 @@
-package com.mygdx.game.physics;
+package com.mygdx.game.collision;
 
 import com.mygdx.game.entity.AbstractEntity;
 

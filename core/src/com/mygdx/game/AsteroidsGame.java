@@ -39,6 +39,7 @@ public class AsteroidsGame {
     private IAsteroidsFactory asteroidsFactory;
     private IMissileFactory missileFactory;
     private boolean gameOver;
+    private final static boolean CAN_DIE = false;
 
     public AsteroidsGame() {
         this.entities = new ArrayList<AbstractEntity>();
@@ -48,12 +49,12 @@ public class AsteroidsGame {
         this.gameOver = false;
         entities.add(player);
 
-	//entities.add(asteroidsFactory.createAsteroid(ASTEROIDS_SIZE));
+	entities.add(asteroidsFactory.createAsteroid(ASTEROIDS_SIZE));
         //entities.add(asteroidsFactory.createAsteroid(ASTEROIDS_SIZE, new Vector2(100,300), new Vector2(80,80)));
         //entities.add(asteroidsFactory.createAsteroid(ASTEROIDS_SIZE, new Vector2(500,300), new Vector2(-80,80)));
 
-        entities.add(asteroidsFactory.createAsteroid(ASTEROIDS_SIZE, new Vector2(100,200)));
-        entities.add(asteroidsFactory.createAsteroid(ASTEROIDS_SIZE, new Vector2(400,200)));
+        //entities.add(asteroidsFactory.createAsteroid(ASTEROIDS_SIZE, new Vector2(100,200)));
+        //entities.add(asteroidsFactory.createAsteroid(ASTEROIDS_SIZE, new Vector2(400,200)));
     }
 
     public void updateGame(float delta) {
@@ -97,7 +98,9 @@ public class AsteroidsGame {
                         missileAsteroidCollision(e2, e1);
                         break;
                     case PLAYER:
-                        gameOver = true;
+			if (CAN_DIE){
+			    gameOver = true;
+			}
                         break;
                     default:
                         break;
@@ -105,7 +108,9 @@ public class AsteroidsGame {
             } else if (e1.getEntityType() == EntityType.PLAYER) {
                 switch (e2.getEntityType()) {
                     case ASTEROID:
-                        gameOver = true;
+			if (CAN_DIE){
+			    gameOver = true;
+			}
                         break;
                     default:
                         break;
